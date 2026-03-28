@@ -8,12 +8,14 @@ function Dashboard() {
 
   const token = localStorage.getItem("token");
 
-  // GET TASKS
+  const API = "https://task-manager-backend-ynnnb.onrender.com/api/tasks";
+
+  // ✅ GET TASKS
   const fetchTasks = async () => {
     try {
       setLoading(true);
 
-      const res = await axios.get("http://localhost:8000/api/tasks", {
+      const res = await axios.get(API, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -27,7 +29,7 @@ function Dashboard() {
     }
   };
 
-  // ADD TASK
+  // ✅ ADD TASK
   const addTask = async () => {
     if (!title.trim()) {
       alert("Task cannot be empty ❌");
@@ -36,7 +38,7 @@ function Dashboard() {
 
     try {
       await axios.post(
-        "http://localhost:8000/api/tasks",
+        API,
         { title },
         {
           headers: {
@@ -52,10 +54,10 @@ function Dashboard() {
     }
   };
 
-  // DELETE TASK
+  // ✅ DELETE TASK
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/tasks/${id}`, {
+      await axios.delete(`${API}/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -67,6 +69,7 @@ function Dashboard() {
     }
   };
 
+  // ✅ LOGOUT
   const logout = () => {
     localStorage.removeItem("token");
     window.location.reload();
@@ -83,7 +86,7 @@ function Dashboard() {
         <span className="title-badge">Task Manager</span>
       </h1>
 
-      {/* Add Task */}
+      {/* ADD TASK */}
       <div className="add-task">
         <input
           type="text"
@@ -94,30 +97,28 @@ function Dashboard() {
         <button onClick={addTask}>Add</button>
       </div>
 
-      {/* Task List */}
-      <div className="task-list">
-        {loading ? (
-          <p>Loading...</p>
-        ) : tasks.length === 0 ? (
-          <p>No tasks yet</p>
-        ) : (
-          tasks.map((task) => (
-            <div className="task-card" key={task._id}>
-              <span>{task.title}</span>
+      {/* TASK LIST */}
+      <h3>My Tasks</h3>
 
-              {/* DELETE BUTTON */}
-              <button onClick={() => deleteTask(task._id)}>
-                ❌ Delete
-              </button>
-            </div>
-          ))
-        )}
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        tasks.map((task) => (
+          <div key={task._id} className="task">
+            <span>{task.title}</span>
+            <button onClick={() => deleteTask(task._id)}>
+              Delete
+            </button>
+          </div>
+        ))
+      )}
+
+      {/* LOGOUT */}
+      <div className="logout-container">
+        <button onClick={logout} className="logout-btn">
+          Logout
+        </button>
       </div>
-
-      {/* Logout Button */}
-      <button className="logout" onClick={logout}>
-        Logout
-      </button>
     </div>
   );
 }
