@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -15,10 +16,9 @@ function Login() {
         }
       );
 
-      // ✅ correct check
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
-        window.location.href = "/dashboard"; // redirect after login
+        window.location.href = "/dashboard";
       } else {
         alert("Invalid credentials ❌");
       }
@@ -29,8 +29,8 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
+    <div className="container">
+      <div className="card">
         <h1>Task Manager 🚀</h1>
         <h3>Login</h3>
 
@@ -49,6 +49,11 @@ function Login() {
         />
 
         <button onClick={handleLogin}>Login</button>
+
+        <p style={{ marginTop: "10px" }}>
+          Don't have an account?{" "}
+          <Link to="/register">Sign Up</Link>
+        </p>
       </div>
     </div>
   );

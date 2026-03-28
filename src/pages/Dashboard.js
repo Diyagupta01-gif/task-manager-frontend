@@ -8,37 +8,30 @@ function Dashboard() {
 
   const token = localStorage.getItem("token");
 
-  const API = "https://task-manager-backend-ynnnb.onrender.com/api/tasks";
-
-  // ✅ GET TASKS
   const fetchTasks = async () => {
     try {
-      setLoading(true);
-
-      const res = await axios.get(API, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const res = await axios.get(
+        "https://task-manager-backend-ynnb.onrender.com/api/tasks",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setTasks(res.data);
     } catch (err) {
       console.log(err);
-    } finally {
-      setLoading(false);
     }
   };
 
-  // ✅ ADD TASK
-  const addTask = async () => {
-    if (!title.trim()) {
-      alert("Task cannot be empty ❌");
-      return;
-    }
+  const handleAdd = async () => {
+    if (!title) return;
 
     try {
+      setLoading(true);
+
       await axios.post(
-        API,
+        "https://task-manager-backend-ynnb.onrender.com/api/tasks",
         { title },
         {
           headers: {
@@ -51,71 +44,52 @@ function Dashboard() {
       fetchTasks();
     } catch (err) {
       console.log(err);
+      alert("Task add failed ❌");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // ✅ DELETE TASK
-  const deleteTask = async (id) => {
-    try {
-      await axios.delete(`${API}/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      fetchTasks();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // ✅ LOGOUT
-  const logout = () => {
+  const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.reload();
+    window.location.href = "/";
   };
 
   useEffect(() => {
     fetchTasks();
-    // eslint-disable-next-line
   }, []);
 
   return (
     <div className="container">
-      <h1 className="title">
-        <span className="title-badge">Task Manager</span>
-      </h1>
+      <div className="card">
+        <h1>Task Manager 🚀</h1>
 
-      {/* ADD TASK */}
-      <div className="add-task">
         <input
-          type="text"
-          placeholder="Enter task..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          placeholder="Enter task"
         />
-        <button onClick={addTask}>Add</button>
-      </div>
 
-      {/* TASK LIST */}
-      <h3>My Tasks</h3>
+        <button onClick={handleAdd} disabled={loading}>
+          {loading ? "Adding..." : "Add Task"}
+        </button>
 
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        tasks.map((task) => (
-          <div key={task._id} className="task">
-            <span>{task.title}</span>
-            <button onClick={() => deleteTask(task._id)}>
-              Delete
-            </button>
-          </div>
-        ))
-      )}
+        <h3 style={{ marginTop: "20px" }}>My Tasks</h3>
 
-      {/* LOGOUT */}
-      <div className="logout-container">
-        <button onClick={logout} className="logout-btn">
+        {tasks.length === 0 ? (
+          <p>No tasks yet</p>
+        ) : (
+          tasks.map((task) => (
+            <div key={task._id} className="task">
+              {task.title}
+            </div>
+          ))
+        )}
+
+        <button
+          onClick={handleLogout}
+          style={{ marginTop: "15px", background: "#ff4d4d" }}
+        >
           Logout
         </button>
       </div>
