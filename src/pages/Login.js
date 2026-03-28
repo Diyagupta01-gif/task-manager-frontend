@@ -7,15 +7,24 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post("https://your-backend.onrender.com/api/auth/login", {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "https://task-manager-backend-ynnb.onrender.com/api/auth/login",
+        {
+          email,
+          password,
+        }
+      );
 
-      localStorage.setItem("token", res.data.token);
-      window.location.reload();
+      // ✅ correct check
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+        window.location.href = "/dashboard"; // redirect after login
+      } else {
+        alert("Invalid credentials ❌");
+      }
     } catch (err) {
-      alert("Invalid credentials ❌");
+      console.log(err);
+      alert("Login failed ❌");
     }
   };
 
