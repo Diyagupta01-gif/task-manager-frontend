@@ -8,7 +8,7 @@ function ForgotPassword() {
     if (!email) return alert("Enter email ❗");
 
     try {
-      const res = await axios.post(
+      await axios.post(
         "https://task-manager-backend-ynnb.onrender.com/api/auth/forgot",
         { email }
       );

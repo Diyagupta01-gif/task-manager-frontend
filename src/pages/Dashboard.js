@@ -23,7 +23,8 @@ function Dashboard() {
       return;
     }
     fetchTasks();
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
 
   // ✅ FETCH TASKS (SAFE)
   const fetchTasks = async () => {
