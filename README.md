@@ -5,7 +5,9 @@ This is the frontend of the Task Manager application built using React.js. It pr
 ---
 
 ## 🚀 Live Demo
-https://transcendent-douhua-23085f.netlify.app/
+cutetask.netlify.app
+
+
 
 ---
 
